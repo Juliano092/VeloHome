@@ -12,6 +12,8 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
+        <!-- Alpine.js -->
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
         
         <!-- Tailwind CDN for development without Node -->
         <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
@@ -48,22 +50,27 @@
     </head>
     <body class="font-sans antialiased text-gray-100 selection:bg-cyan-500/30 selection:text-cyan-200">
         <div class="bg-glow"></div>
-        <div class="min-h-screen">
+        <div class="h-screen flex overflow-hidden">
+            
+            <!-- Sidebar -->
             @include('layouts.navigation')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="glass-panel border-b border-white/10">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-white">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+            <!-- Main Content Area -->
+            <div class="flex-1 flex flex-col h-screen overflow-hidden">
+                <!-- Page Heading -->
+                @isset($header)
+                    <header class="glass-panel border-b border-white/10 z-10 shrink-0">
+                        <div class="py-4 px-6 text-white flex justify-between items-center">
+                            {{ $header }}
+                        </div>
+                    </header>
+                @endisset
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                <!-- Page Content -->
+                <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+                    {{ $slot }}
+                </main>
+            </div>
         </div>
     </body>
 </html>

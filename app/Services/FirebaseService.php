@@ -81,11 +81,69 @@ class FirebaseService
     }
 
     /**
+     * Atualiza um projeto
+     */
+    public function updateProject($id, array $data)
+    {
+        $this->getProjectsReference()->getChild($id)->update($data);
+        return true;
+    }
+
+    /**
      * Deleta um projeto
      */
     public function deleteProject($id)
     {
         $this->getProjectsReference()->getChild($id)->remove();
+        return true;
+    }
+
+    // ==========================================
+    // VENDAS (SALES)
+    // ==========================================
+
+    public function getSalesReference()
+    {
+        return $this->database->getReference('sales');
+    }
+
+    public function createSale(array $data)
+    {
+        $reference = $this->getSalesReference();
+        $data['created_at'] = time();
+        $newSale = $reference->push($data);
+
+        return $newSale->getKey();
+    }
+
+    public function getAllSales()
+    {
+        $snapshot = $this->getSalesReference()->getSnapshot();
+        $sales = [];
+
+        if ($snapshot->hasChildren()) {
+            foreach ($snapshot->getValue() as $key => $saleData) {
+                $sales[] = array_merge(['id' => $key], $saleData);
+            }
+        }
+
+        // Ordenar as mais recentes primeiro
+        usort($sales, function($a, $b) {
+            return ($b['created_at'] ?? 0) <=> ($a['created_at'] ?? 0);
+        });
+
+        return $sales;
+    }
+
+    public function updateSale($id, array $data)
+    {
+        $this->getSalesReference()->getChild($id)->update($data);
+        return true;
+    }
+
+    public function deleteSale($id)
+    {
+        $this->getSalesReference()->getChild($id)->remove();
         return true;
     }
 }

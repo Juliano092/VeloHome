@@ -15,10 +15,20 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+    // Projects / Portfolio
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
     Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+    Route::get('/projects/{id}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+    Route::put('/projects/{id}', [ProjectController::class, 'update'])->name('projects.update');
     Route::delete('/projects/{id}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+
+    // Sales
+    Route::get('/sales', [\App\Http\Controllers\Admin\SalesController::class, 'index'])->name('sales.index');
+    Route::get('/calculator', [\App\Http\Controllers\Admin\SalesController::class, 'calculator'])->name('calculator');
+    Route::post('/sales', [\App\Http\Controllers\Admin\SalesController::class, 'store'])->name('sales.store');
+    Route::put('/sales/{id}', [\App\Http\Controllers\Admin\SalesController::class, 'update'])->name('sales.update');
+    Route::delete('/sales/{id}', [\App\Http\Controllers\Admin\SalesController::class, 'destroy'])->name('sales.destroy');
 });
 
 Route::middleware('auth')->group(function () {

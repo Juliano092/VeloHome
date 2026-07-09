@@ -12,6 +12,9 @@
         <!-- Tailwind CSS (via CDN temporariamente para contornar a versão do Node) -->
         <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
         
+        <!-- Alpine.js -->
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+        
         <style type="text/tailwindcss">
             @theme {
                 --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
@@ -77,13 +80,7 @@
                         </a>
                     </div>
                     <div>
-                        @if (Route::has('login'))
-                            @auth
-                                <a href="{{ url('/dashboard') }}" class="px-5 py-2.5 rounded-full text-sm font-semibold bg-white/5 text-white hover:bg-white/10 border border-white/10 transition-all shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                                    Painel Admin
-                                </a>
-                            @endauth
-                        @endif
+                        <!-- Botão removido para garantir que a página seja 100% focada no cliente -->
                     </div>
                 </div>
             </div>
