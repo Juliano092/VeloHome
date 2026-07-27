@@ -28,11 +28,17 @@ COPY . .
 # Instala as dependências do Laravel
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
+# Prepara diretórios de cache e storage do Laravel
+RUN mkdir -p /var/www/storage/framework/sessions \
+    /var/www/storage/framework/views \
+    /var/www/storage/framework/cache \
+    /var/www/bootstrap/cache
+
 # Ajusta permissões
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+RUN chmod -R 777 /var/www/storage /var/www/bootstrap/cache
 
 # Expõe a porta que o Render utiliza
 EXPOSE 8080
 
-# Comando para iniciar o Laravel na porta padrão do Render
-CMD php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
+# Script de inicialização para gerar APP_KEY se ausente e iniciar o servidor
+CMD php artisan config:clear && php artisan key:generate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
