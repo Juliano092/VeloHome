@@ -11,29 +11,39 @@ class FirebaseService
     public function __construct()
     {
         $factory = new Factory();
-
         $credentialsPath = env('FIREBASE_CREDENTIALS');
-        
-        // Se for um arquivo existente, carrega pelo caminho. Se for uma string JSON, usa com ServiceAccount
+        $hasCredentials = false;
+
         if ($credentialsPath && file_exists(base_path($credentialsPath)) && is_file(base_path($credentialsPath))) {
             $factory = $factory->withServiceAccount(base_path($credentialsPath));
+            $hasCredentials = true;
         } elseif ($credentialsPath && str_starts_with(trim($credentialsPath), '{')) {
             $factory = $factory->withServiceAccount(json_decode($credentialsPath, true));
+            $hasCredentials = true;
         } elseif (file_exists(base_path('firebase_credentials.json'))) {
             $factory = $factory->withServiceAccount(base_path('firebase_credentials.json'));
+            $hasCredentials = true;
         }
 
         if (env('FIREBASE_DATABASE_URL')) {
             $factory = $factory->withDatabaseUri(env('FIREBASE_DATABASE_URL'));
         }
 
-        // Se estiver em ambiente local (desenvolvimento) ou sem SSL verificado
+        // Se estiver em ambiente local ou produção
         if (env('APP_ENV') === 'local' || env('APP_ENV') == '') {
             $options = \Kreait\Firebase\Http\HttpClientOptions::default()->withGuzzleConfigOption('verify', false);
             $factory = $factory->withHttpClientOptions($options);
         }
 
-        $this->database = $factory->createDatabase();
+        try {
+            if ($hasCredentials) {
+                $this->database = $factory->createDatabase();
+            } else {
+                $this->database = null;
+            }
+        } catch (\Throwable $e) {
+            $this->database = null;
+        }
     }
 
     /**
@@ -62,13 +72,21 @@ class FirebaseService
      */
     public function getAllProjects()
     {
-        $snapshot = $this->getProjectsReference()->getSnapshot();
         $projects = [];
 
-        if ($snapshot->hasChildren()) {
-            foreach ($snapshot->getValue() as $key => $projectData) {
-                $projects[] = array_merge(['id' => $key], $projectData);
+        if (!$this->database) {
+            return $projects;
+        }
+
+        try {
+            $snapshot = $this->getProjectsReference()->getSnapshot();
+            if ($snapshot->hasChildren()) {
+                foreach ($snapshot->getValue() as $key => $projectData) {
+                    $projects[] = array_merge(['id' => $key], $projectData);
+                }
             }
+        } catch (\Throwable $e) {
+            return $projects;
         }
 
         // Ordenar os mais recentes primeiro
@@ -131,13 +149,21 @@ class FirebaseService
 
     public function getAllSales()
     {
-        $snapshot = $this->getSalesReference()->getSnapshot();
         $sales = [];
 
-        if ($snapshot->hasChildren()) {
-            foreach ($snapshot->getValue() as $key => $saleData) {
-                $sales[] = array_merge(['id' => $key], $saleData);
+        if (!$this->database) {
+            return $sales;
+        }
+
+        try {
+            $snapshot = $this->getSalesReference()->getSnapshot();
+            if ($snapshot->hasChildren()) {
+                foreach ($snapshot->getValue() as $key => $saleData) {
+                    $sales[] = array_merge(['id' => $key], $saleData);
+                }
             }
+        } catch (\Throwable $e) {
+            return $sales;
         }
 
         // Ordenar as mais recentes primeiro
