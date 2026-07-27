@@ -5,62 +5,54 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'ValoHome 3D') }} - Painel</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <!-- Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
         <!-- Alpine.js -->
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
         
-        <!-- Tailwind CDN for development without Node -->
+        <!-- Tailwind CSS -->
         <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
         <style type="text/tailwindcss">
             @theme {
-                --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
-                --color-glass: rgba(15, 23, 42, 0.4);
-                --color-glass-border: rgba(255, 255, 255, 0.08);
+                --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+                --font-serif: 'Cormorant Garamond', Georgia, serif;
+                --color-glass: rgba(250, 248, 245, 0.9);
+                --color-glass-border: rgba(196, 181, 165, 0.3);
             }
             body {
-                background-color: #030712;
+                background-color: #F5F2EB;
+                color: #2B2927;
                 position: relative;
                 overflow-x: hidden;
             }
-            .bg-glow {
-                position: absolute;
-                width: 600px;
-                height: 600px;
-                background: radial-gradient(circle, rgba(6,182,212,0.15) 0%, rgba(0,0,0,0) 70%);
-                top: 0;
-                left: 50%;
-                transform: translateX(-50%);
-                border-radius: 50%;
-                z-index: -1;
-                filter: blur(60px);
+            .font-serif-logo {
+                font-family: 'Cormorant Garamond', serif;
             }
-            .glass-panel {
+            .glass-panel-light {
                 background-color: var(--color-glass);
-                backdrop-filter: blur(16px);
-                border: 1px solid var(--color-glass-border);
-                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+                backdrop-filter: blur(12px);
+                border-bottom: 1px solid var(--color-glass-border);
             }
         </style>
     </head>
-    <body class="font-sans antialiased text-gray-100 selection:bg-cyan-500/30 selection:text-cyan-200">
-        <div class="bg-glow"></div>
+    <body class="font-sans antialiased text-[#2B2927] selection:bg-[#C4B5A5]/30 selection:text-[#2B2927]">
         <div class="h-screen flex overflow-hidden">
             
-            <!-- Sidebar -->
+            <!-- Sidebar Navigation -->
             @include('layouts.navigation')
 
             <!-- Main Content Area -->
-            <div class="flex-1 flex flex-col h-screen overflow-hidden">
+            <div class="flex-1 flex flex-col h-screen overflow-hidden bg-[#F5F2EB]">
                 <!-- Page Heading -->
                 @isset($header)
-                    <header class="glass-panel border-b border-white/10 z-10 shrink-0">
-                        <div class="py-4 px-6 text-white flex justify-between items-center">
+                    <header class="glass-panel-light z-10 shrink-0">
+                        <div class="py-5 px-8 text-[#2B2927] flex justify-between items-center">
                             {{ $header }}
                         </div>
                     </header>

@@ -5,54 +5,66 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'ValoHome 3D') }} - Login</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <!-- Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        <!-- Scripts -->
-        
-        <!-- Tailwind CDN for development without Node -->
+        <!-- Tailwind CSS -->
         <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
         <style type="text/tailwindcss">
             @theme {
-                --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+                --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+                --font-serif: 'Cormorant Garamond', Georgia, serif;
             }
             body {
-                /* Azul escuro profundo e profissional */
-                background-color: #0B132B;
+                background-color: #F5F2EB;
+                color: #2B2927;
                 position: relative;
                 overflow: hidden;
             }
+            .font-serif-logo {
+                font-family: 'Cormorant Garamond', serif;
+            }
         </style>
     </head>
-    <body class="font-sans text-gray-100 antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
+    <body class="font-sans antialiased selection:bg-[#C4B5A5]/30 selection:text-[#2B2927]">
         
-        <!-- Fundo Azul Escuro Principal -->
-        <div class="absolute inset-0 bg-[#0B132B] z-0"></div>
+        <!-- Fundo Sutil -->
+        <div class="absolute inset-0 bg-[#F5F2EB] z-0"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-radial from-[#C4B5A5]/20 to-transparent rounded-full filter blur-3xl z-0 pointer-events-none"></div>
         
         <div class="min-h-screen flex flex-col sm:justify-center items-center relative z-10 px-4">
             
-            <!-- Main Glass Card -->
-            <div class="w-full max-w-5xl flex flex-col md:flex-row rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] border border-white/10 backdrop-blur-2xl bg-[#000000]/60 h-[600px] relative z-20">
+            <!-- Card Principal de Login estilo Boutique -->
+            <div class="w-full max-w-4xl flex flex-col md:flex-row rounded-3xl overflow-hidden shadow-2xl border border-[#C4B5A5]/40 bg-[#FAF8F5] min-h-[550px] relative z-20">
                 
                 <!-- Lado Esquerdo: Formulário -->
-                <div class="w-full md:w-1/2 bg-[#000000]/40 p-12 flex flex-col justify-center relative z-20 border-r border-white/5">
-                    <div class="mb-10">
-                        <a href="/" class="text-3xl font-black tracking-tight text-white flex items-center gap-3">
-                            <span translate="no">Shift<span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">3D</span></span>
+                <div class="w-full md:w-1/2 p-8 sm:p-12 flex flex-col justify-center relative z-20 border-b md:border-b-0 md:border-r border-[#C4B5A5]/30">
+                    <div class="mb-8">
+                        <a href="/" class="flex flex-col">
+                            <span class="font-serif-logo text-3xl font-semibold tracking-wider text-[#2B2927] leading-none">valohome <span class="text-xs font-sans tracking-widest text-[#8C7B6C] font-normal uppercase">3D</span></span>
+                            <span class="text-[9px] tracking-[0.25em] text-[#8C7B6C] uppercase font-medium mt-1">Design & Value</span>
                         </a>
                     </div>
                     
                     {{ $slot }}
                 </div>
 
-                <!-- Lado Direito: Imagem -->
-                <div class="hidden md:flex w-1/2 bg-transparent relative items-center justify-center overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 to-blue-500/10 mix-blend-overlay z-10 pointer-events-none"></div>
-                    
-                    <img src="{{ asset('imagem/logo.png') }}" alt="Logo da Empresa" class="absolute inset-0 w-full h-full object-contain z-0 hover:scale-[1.03] transition-transform duration-1000 opacity-90 hover:opacity-100">
+                <!-- Lado Direito: Identidade Visual da Marca -->
+                <div class="hidden md:flex w-1/2 bg-[#F5F2EB] relative items-center justify-center p-12 flex-col text-center">
+                    <div class="w-20 h-20 rounded-full border border-[#C4B5A5] bg-[#FAF8F5] flex items-center justify-center shadow-md mb-6">
+                        <svg class="w-10 h-10 text-[#8C7B6C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif-logo text-3xl text-[#2B2927] font-medium mb-2">Painel de Gestão</h3>
+                    <p class="text-xs text-[#8C7B6C] uppercase tracking-[0.2em] font-semibold mb-4">ValoHome 3D</p>
+                    <p class="text-xs text-[#4A4643] max-w-xs font-light leading-relaxed">
+                        Área exclusiva para administração de produtos, portfólio e cálculo de orçamentos de impressão 3D.
+                    </p>
                 </div>
 
             </div>

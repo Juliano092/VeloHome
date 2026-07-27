@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl leading-tight">
+        <h2 class="font-serif-logo text-3xl font-medium text-[#2B2927] leading-tight">
             {{ __('Calculadora de Orçamentos') }}
         </h2>
     </x-slot>
@@ -8,7 +8,7 @@
     <!-- Alpine.js via CDN para reatividade -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
 
-    <div class="py-12" x-data="calculatorApp()">
+    <div class="py-6" x-data="calculatorApp()">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -17,29 +17,29 @@
                 <div class="lg:col-span-2 space-y-6">
                     
                     <!-- 1. Dados do Material e Consumo -->
-                    <div class="glass-panel overflow-hidden shadow-xl sm:rounded-2xl p-6 border-l-4 border-l-cyan-500">
-                        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    <div class="bg-[#FAF8F5] overflow-hidden shadow-sm sm:rounded-2xl p-6 border border-[#C4B5A5]/40 border-l-4 border-l-[#4A2E2B]">
+                        <h3 class="font-serif-logo text-2xl font-medium text-[#2B2927] mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-[#8C7B6C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                             1. Material e Consumo
                         </h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-400 mb-1">Peso da Peça <span class="text-xs text-gray-500">(Fatiador)</span></label>
+                                <label class="block text-xs font-semibold text-[#8C7B6C] uppercase tracking-wider mb-1">Peso da Peça <span class="text-[10px] text-[#8C7B6C]/80 font-normal">(Fatiador)</span></label>
                                 <div class="flex gap-2">
-                                    <input type="number" x-model.number="peso_da_peca" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:ring-cyan-500 focus:border-cyan-500 outline-none" placeholder="Ex: 150">
-                                    <select x-model="unidade_peso" class="w-24 bg-[#0B132B] border border-white/10 rounded-lg px-2 py-2 text-white focus:ring-cyan-500 focus:border-cyan-500 outline-none">
+                                    <input type="number" x-model.number="peso_da_peca" class="w-full bg-[#F5F2EB] border border-[#C4B5A5]/50 rounded-xl px-4 py-2.5 text-[#2B2927] focus:ring-2 focus:ring-[#8C7B6C]/30 focus:border-[#2B2927] outline-none text-sm" placeholder="Ex: 150">
+                                    <select x-model="unidade_peso" class="w-24 bg-[#F5F2EB] border border-[#C4B5A5]/50 rounded-xl px-2 py-2.5 text-[#2B2927] focus:ring-2 focus:ring-[#8C7B6C]/30 focus:border-[#2B2927] outline-none text-sm">
                                         <option value="g">g</option>
                                         <option value="kg">kg</option>
                                     </select>
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-400 mb-1">Preço do Filamento (R$/kg)</label>
-                                <input type="number" step="0.01" x-model.number="preco_do_filamento" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:ring-cyan-500 focus:border-cyan-500 outline-none" placeholder="Ex: 120.00">
+                                <label class="block text-xs font-semibold text-[#8C7B6C] uppercase tracking-wider mb-1">Preço do Filamento (R$/kg)</label>
+                                <input type="number" step="0.01" x-model.number="preco_do_filamento" class="w-full bg-[#F5F2EB] border border-[#C4B5A5]/50 rounded-xl px-4 py-2.5 text-[#2B2927] focus:ring-2 focus:ring-[#8C7B6C]/30 focus:border-[#2B2927] outline-none text-sm" placeholder="Ex: 120.00">
                             </div>
                             <div class="sm:col-span-2">
-                                <label class="block text-sm font-medium text-gray-400 mb-1">Tipo de Material (Opcional)</label>
-                                <select class="w-full bg-[#0B132B] border border-white/10 rounded-lg px-4 py-2 text-white focus:ring-cyan-500 focus:border-cyan-500 outline-none">
+                                <label class="block text-xs font-semibold text-[#8C7B6C] uppercase tracking-wider mb-1">Tipo de Material (Opcional)</label>
+                                <select class="w-full bg-[#F5F2EB] border border-[#C4B5A5]/50 rounded-xl px-4 py-2.5 text-[#2B2927] focus:ring-2 focus:ring-[#8C7B6C]/30 focus:border-[#2B2927] outline-none text-sm">
                                     <option>PLA</option>
                                     <option>PETG</option>
                                     <option>ABS</option>
@@ -51,70 +51,70 @@
                     </div>
 
                     <!-- 2. Tempo e Desgaste da Máquina -->
-                    <div class="glass-panel overflow-hidden shadow-xl sm:rounded-2xl p-6 border-l-4 border-l-blue-500">
-                        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div class="bg-[#FAF8F5] overflow-hidden shadow-sm sm:rounded-2xl p-6 border border-[#C4B5A5]/40 border-l-4 border-l-[#8C7B6C]">
+                        <h3 class="font-serif-logo text-2xl font-medium text-[#2B2927] mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-[#8C7B6C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             2. Tempo e Máquina
                         </h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-400 mb-1">Tempo de Impressão</label>
+                                <label class="block text-xs font-semibold text-[#8C7B6C] uppercase tracking-wider mb-1">Tempo de Impressão</label>
                                 <div class="flex gap-2">
-                                    <input type="number" step="0.1" x-model.number="tempo_de_impressao" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="Ex: 5.5">
-                                    <select x-model="unidade_tempo" class="w-28 bg-[#0B132B] border border-white/10 rounded-lg px-2 py-2 text-white focus:ring-blue-500 focus:border-blue-500 outline-none">
+                                    <input type="number" step="0.1" x-model.number="tempo_de_impressao" class="w-full bg-[#F5F2EB] border border-[#C4B5A5]/50 rounded-xl px-4 py-2.5 text-[#2B2927] focus:ring-2 focus:ring-[#8C7B6C]/30 focus:border-[#2B2927] outline-none text-sm" placeholder="Ex: 5.5">
+                                    <select x-model="unidade_tempo" class="w-28 bg-[#F5F2EB] border border-[#C4B5A5]/50 rounded-xl px-2 py-2.5 text-[#2B2927] focus:ring-2 focus:ring-[#8C7B6C]/30 focus:border-[#2B2927] outline-none text-sm">
                                         <option value="horas">Horas</option>
                                         <option value="minutos">Minutos</option>
                                     </select>
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-400 mb-1">Custo Hora/Máquina (R$)</label>
-                                <input type="number" step="0.01" x-model.number="custo_hora_maquina" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:ring-blue-500 focus:border-blue-500 outline-none">
+                                <label class="block text-xs font-semibold text-[#8C7B6C] uppercase tracking-wider mb-1">Custo Hora/Máquina (R$)</label>
+                                <input type="number" step="0.01" x-model.number="custo_hora_maquina" class="w-full bg-[#F5F2EB] border border-[#C4B5A5]/50 rounded-xl px-4 py-2.5 text-[#2B2927] focus:ring-2 focus:ring-[#8C7B6C]/30 focus:border-[#2B2927] outline-none text-sm">
                             </div>
                         </div>
                     </div>
 
                     <!-- 3. Mão de Obra -->
-                    <div class="glass-panel overflow-hidden shadow-xl sm:rounded-2xl p-6 border-l-4 border-l-purple-500">
-                        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    <div class="bg-[#FAF8F5] overflow-hidden shadow-sm sm:rounded-2xl p-6 border border-[#C4B5A5]/40 border-l-4 border-l-[#4A2E2B]">
+                        <h3 class="font-serif-logo text-2xl font-medium text-[#2B2927] mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-[#8C7B6C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                             3. Mão de Obra e Setup
                         </h3>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-400 mb-1">Preparação (min)</label>
-                                <input type="number" x-model.number="tempo_de_preparacao" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:ring-purple-500 focus:border-purple-500 outline-none" placeholder="Ex: 15">
+                                <label class="block text-xs font-semibold text-[#8C7B6C] uppercase tracking-wider mb-1">Preparação (min)</label>
+                                <input type="number" x-model.number="tempo_de_preparacao" class="w-full bg-[#F5F2EB] border border-[#C4B5A5]/50 rounded-xl px-4 py-2.5 text-[#2B2927] focus:ring-2 focus:ring-[#8C7B6C]/30 focus:border-[#2B2927] outline-none text-sm" placeholder="Ex: 15">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-400 mb-1">Pós-Process. (min)</label>
-                                <input type="number" x-model.number="tempo_de_pos_processamento" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:ring-purple-500 focus:border-purple-500 outline-none" placeholder="Ex: 30">
+                                <label class="block text-xs font-semibold text-[#8C7B6C] uppercase tracking-wider mb-1">Pós-Process. (min)</label>
+                                <input type="number" x-model.number="tempo_de_pos_processamento" class="w-full bg-[#F5F2EB] border border-[#C4B5A5]/50 rounded-xl px-4 py-2.5 text-[#2B2927] focus:ring-2 focus:ring-[#8C7B6C]/30 focus:border-[#2B2927] outline-none text-sm" placeholder="Ex: 30">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-400 mb-1">Sua Hora Trab. (R$)</label>
-                                <input type="number" step="0.01" x-model.number="valor_da_hora_trabalho" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:ring-purple-500 focus:border-purple-500 outline-none">
+                                <label class="block text-xs font-semibold text-[#8C7B6C] uppercase tracking-wider mb-1">Sua Hora Trab. (R$)</label>
+                                <input type="number" step="0.01" x-model.number="valor_da_hora_trabalho" class="w-full bg-[#F5F2EB] border border-[#C4B5A5]/50 rounded-xl px-4 py-2.5 text-[#2B2927] focus:ring-2 focus:ring-[#8C7B6C]/30 focus:border-[#2B2927] outline-none text-sm">
                             </div>
                         </div>
                     </div>
 
                     <!-- 4. Margens (Ocultos/Fixos) -->
-                    <div class="glass-panel overflow-hidden shadow-xl sm:rounded-2xl p-6 border-l-4 border-l-green-500">
-                        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div class="bg-[#FAF8F5] overflow-hidden shadow-sm sm:rounded-2xl p-6 border border-[#C4B5A5]/40 border-l-4 border-l-[#8C7B6C]">
+                        <h3 class="font-serif-logo text-2xl font-medium text-[#2B2927] mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-[#8C7B6C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             4. Custos Fixos e Lucro
                         </h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-400 mb-1">Taxa de Falha (%)</label>
+                                <label class="block text-xs font-semibold text-[#8C7B6C] uppercase tracking-wider mb-1">Taxa de Falha (%)</label>
                                 <div class="relative">
-                                    <input type="number" step="1" x-model.number="taxa_de_falha" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:ring-green-500 focus:border-green-500 outline-none pr-8">
-                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500">%</div>
+                                    <input type="number" step="1" x-model.number="taxa_de_falha" class="w-full bg-[#F5F2EB] border border-[#C4B5A5]/50 rounded-xl px-4 py-2.5 text-[#2B2927] focus:ring-2 focus:ring-[#8C7B6C]/30 focus:border-[#2B2927] outline-none text-sm pr-8">
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[#8C7B6C]">%</div>
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-400 mb-1">Margem de Lucro (%)</label>
+                                <label class="block text-xs font-semibold text-[#8C7B6C] uppercase tracking-wider mb-1">Margem de Lucro (%)</label>
                                 <div class="relative">
-                                    <input type="number" step="1" x-model.number="margem_de_lucro" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:ring-green-500 focus:border-green-500 outline-none pr-8">
-                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500">%</div>
+                                    <input type="number" step="1" x-model.number="margem_de_lucro" class="w-full bg-[#F5F2EB] border border-[#C4B5A5]/50 rounded-xl px-4 py-2.5 text-[#2B2927] focus:ring-2 focus:ring-[#8C7B6C]/30 focus:border-[#2B2927] outline-none text-sm pr-8">
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[#8C7B6C]">%</div>
                                 </div>
                             </div>
                         </div>
@@ -124,46 +124,46 @@
 
                 <!-- Coluna Direita: Resultados (1/3) -->
                 <div class="lg:col-span-1">
-                    <div class="glass-panel overflow-hidden shadow-xl sm:rounded-2xl p-6 sticky top-6">
-                        <h3 class="text-xl font-bold text-white mb-6 border-b border-white/10 pb-4 text-center">Resumo do Orçamento</h3>
+                    <div class="bg-[#FAF8F5] overflow-hidden shadow-sm sm:rounded-2xl p-6 sticky top-6 border border-[#C4B5A5]/40">
+                        <h3 class="font-serif-logo text-2xl font-medium text-[#2B2927] mb-6 border-b border-[#C4B5A5]/30 pb-4 text-center">Resumo do Orçamento</h3>
                         
                         <div class="space-y-4">
                             <!-- Detalhamento -->
                             <div class="flex justify-between items-center text-sm">
-                                <span class="text-gray-400">Custo Material:</span>
-                                <span class="text-cyan-300 font-medium" x-text="formatMoney(custoMaterial())"></span>
+                                <span class="text-[#8C7B6C]">Custo Material:</span>
+                                <span class="text-[#2B2927] font-semibold" x-text="formatMoney(custoMaterial())"></span>
                             </div>
                             <div class="flex justify-between items-center text-sm">
-                                <span class="text-gray-400">Custo Máquina:</span>
-                                <span class="text-blue-300 font-medium" x-text="formatMoney(custoMaquina())"></span>
+                                <span class="text-[#8C7B6C]">Custo Máquina:</span>
+                                <span class="text-[#2B2927] font-semibold" x-text="formatMoney(custoMaquina())"></span>
                             </div>
                             <div class="flex justify-between items-center text-sm">
-                                <span class="text-gray-400">Mão de Obra:</span>
-                                <span class="text-purple-300 font-medium" x-text="formatMoney(custoMaoDeObra())"></span>
+                                <span class="text-[#8C7B6C]">Mão de Obra:</span>
+                                <span class="text-[#2B2927] font-semibold" x-text="formatMoney(custoMaoDeObra())"></span>
                             </div>
                             
-                            <div class="border-t border-white/10 pt-4 mt-2">
+                            <div class="border-t border-[#C4B5A5]/30 pt-4 mt-2">
                                 <div class="flex justify-between items-center text-sm mb-1">
-                                    <span class="text-gray-300 font-medium">Custo Produção:</span>
-                                    <span class="text-white font-semibold" x-text="formatMoney(custoProducao())"></span>
+                                    <span class="text-[#4A4643] font-medium">Custo Produção:</span>
+                                    <span class="text-[#2B2927] font-bold" x-text="formatMoney(custoProducao())"></span>
                                 </div>
-                                <div class="flex justify-between items-center text-xs text-gray-500 mb-4">
+                                <div class="flex justify-between items-center text-xs text-[#8C7B6C] mb-4">
                                     <span>(Incluindo taxa de falha de <span x-text="taxa_de_falha"></span>%)</span>
                                 </div>
                             </div>
 
                             <!-- Lucro -->
-                            <div class="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
+                            <div class="bg-[#F5F2EB] border border-[#C4B5A5]/50 rounded-xl p-3.5">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-green-400 font-bold text-sm">Lucro Bruto:</span>
-                                    <span class="text-green-400 font-bold" x-text="formatMoney(lucroReal())"></span>
+                                    <span class="text-[#4A2E2B] font-bold text-sm">Lucro Bruto:</span>
+                                    <span class="text-[#4A2E2B] font-bold text-base" x-text="formatMoney(lucroReal())"></span>
                                 </div>
                             </div>
 
                             <!-- Preço Final -->
-                            <div class="mt-6 text-center">
-                                <span class="block text-gray-400 text-sm font-medium mb-1">Preço de Venda Sugerido</span>
-                                <div class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-green-400 drop-shadow-lg" x-text="formatMoney(precoFinal())">
+                            <div class="mt-6 text-center pt-2">
+                                <span class="block text-[#8C7B6C] text-xs uppercase tracking-wider font-semibold mb-1">Preço de Venda Sugerido</span>
+                                <div class="text-4xl font-bold text-[#4A2E2B]" x-text="formatMoney(precoFinal())">
                                     R$ 0,00
                                 </div>
                             </div>
