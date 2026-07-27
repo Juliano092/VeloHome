@@ -10,11 +10,24 @@ class FirebaseService
 
     public function __construct()
     {
-        $factory = (new Factory())
-            ->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS')))
-            ->withDatabaseUri(env('FIREBASE_DATABASE_URL'));
+        $factory = new Factory();
 
-        // Se estiver em ambiente local (desenvolvimento), desativa a verificação SSL para evitar o erro cURL 60
+        $credentialsPath = env('FIREBASE_CREDENTIALS');
+        
+        // Se for um arquivo existente, carrega pelo caminho. Se for uma string JSON, usa com ServiceAccount
+        if ($credentialsPath && file_exists(base_path($credentialsPath)) && is_file(base_path($credentialsPath))) {
+            $factory = $factory->withServiceAccount(base_path($credentialsPath));
+        } elseif ($credentialsPath && str_starts_with(trim($credentialsPath), '{')) {
+            $factory = $factory->withServiceAccount(json_decode($credentialsPath, true));
+        } elseif (file_exists(base_path('firebase_credentials.json'))) {
+            $factory = $factory->withServiceAccount(base_path('firebase_credentials.json'));
+        }
+
+        if (env('FIREBASE_DATABASE_URL')) {
+            $factory = $factory->withDatabaseUri(env('FIREBASE_DATABASE_URL'));
+        }
+
+        // Se estiver em ambiente local (desenvolvimento) ou sem SSL verificado
         if (env('APP_ENV') === 'local' || env('APP_ENV') == '') {
             $options = \Kreait\Firebase\Http\HttpClientOptions::default()->withGuzzleConfigOption('verify', false);
             $factory = $factory->withHttpClientOptions($options);
