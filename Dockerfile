@@ -43,5 +43,5 @@ EXPOSE 8080
 # Copia .env.example para .env se não existir no container
 RUN cp -n .env.example .env || true
 
-# Script de inicialização seguro
-CMD cp -n .env.example .env && php artisan key:generate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
+# Script de inicialização seguro (Cria SQLite, roda migrations, gera key e inicia servidor)
+CMD cp -n .env.example .env && touch /var/www/database/database.sqlite && chmod -R 777 /var/www/database && php artisan key:generate --force && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
