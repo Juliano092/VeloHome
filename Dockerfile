@@ -40,5 +40,8 @@ RUN chmod -R 777 /var/www/storage /var/www/bootstrap/cache
 # Expõe a porta que o Render utiliza
 EXPOSE 8080
 
-# Script de inicialização para gerar APP_KEY se ausente e iniciar o servidor
-CMD php artisan config:clear && php artisan key:generate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
+# Copia .env.example para .env se não existir no container
+RUN cp -n .env.example .env || true
+
+# Script de inicialização seguro
+CMD cp -n .env.example .env && php artisan key:generate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
