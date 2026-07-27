@@ -10,8 +10,17 @@ Route::get('/', function (FirebaseService $firebaseService) {
     return view('welcome', compact('projects'));
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
+Route::get('/dashboard', function (FirebaseService $firebaseService) {
+    $projects = $firebaseService->getAllProjects();
+    $sales = $firebaseService->getAllSales();
+
+    $totalProducts = count($projects);
+    $totalSalesAmount = array_sum(array_column($sales, 'amount_paid'));
+    $totalSalesCount = count($sales);
+    $recentSales = array_slice($sales, 0, 5);
+    $recentProjects = array_slice($projects, 0, 4);
+
+    return view('dashboard', compact('totalProducts', 'totalSalesAmount', 'totalSalesCount', 'recentSales', 'recentProjects'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
@@ -25,6 +34,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     // Sales
     Route::get('/sales', [\App\Http\Controllers\Admin\SalesController::class, 'index'])->name('sales.index');
+    Route::get('/reports', [\App\Http\Controllers\Admin\SalesController::class, 'reports'])->name('reports');
     Route::get('/calculator', [\App\Http\Controllers\Admin\SalesController::class, 'calculator'])->name('calculator');
     Route::post('/sales', [\App\Http\Controllers\Admin\SalesController::class, 'store'])->name('sales.store');
     Route::put('/sales/{id}', [\App\Http\Controllers\Admin\SalesController::class, 'update'])->name('sales.update');
@@ -37,4 +47,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
