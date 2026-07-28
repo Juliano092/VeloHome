@@ -28,9 +28,17 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Remove usuário admin de exemplo antigo caso exista
-        if ($adminEmail !== 'admin@admin.com') {
-            User::where('email', 'admin@admin.com')->delete();
+        // Seed inicial de produtos se o catálogo estiver vazio
+        $firebaseService = app(\App\Services\FirebaseService::class);
+        if (count($firebaseService->getAllProjects()) === 0) {
+            $firebaseService->createProject([
+                'title' => 'Suporte de relógio',
+                'category' => 'Acessório para relógio',
+                'price' => 26.90,
+                'image_url' => '/imagem/valohome_logo.png',
+                'images' => ['/imagem/valohome_logo.png'],
+                'description' => 'Peça impressa em alta resolução 3D com acabamento artesanal ValoHome.',
+            ]);
         }
     }
 }
