@@ -17,12 +17,20 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::firstOrCreate(
-            ['email' => 'admin@admin.com'],
+        $adminEmail = env('ADMIN_EMAIL', 'julianocardoso2611@gmail.com');
+        $adminPassword = env('ADMIN_PASSWORD', 'ValoHome3D#2026!');
+
+        User::updateOrCreate(
+            ['email' => $adminEmail],
             [
-                'name' => 'Admin',
-                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'name' => 'ValoHome Admin',
+                'password' => \Illuminate\Support\Facades\Hash::make($adminPassword),
             ]
         );
+
+        // Remove usuário admin de exemplo antigo caso exista
+        if ($adminEmail !== 'admin@admin.com') {
+            User::where('email', 'admin@admin.com')->delete();
+        }
     }
 }
