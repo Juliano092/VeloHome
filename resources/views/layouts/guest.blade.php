@@ -7,6 +7,10 @@
 
         <title>{{ config('app.name', 'ValoHome 3D') }} - Login</title>
 
+        <!-- Favicon / Logo do Navegador -->
+        <link rel="icon" type="image/png" href="{{ asset('imagem/valohome_logo.png') }}">
+        <link rel="shortcut icon" type="image/png" href="{{ asset('imagem/valohome_logo.png') }}">
+
         <!-- Fonts: Cormorant Garamond & Plus Jakarta Sans -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

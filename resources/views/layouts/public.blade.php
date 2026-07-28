@@ -4,6 +4,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{ config('app.name', 'ValoHome 3D - Design & Value') }}</title>
+
+        <!-- Favicon / Logo do Navegador -->
+        <link rel="icon" type="image/png" href="{{ asset('imagem/valohome_logo.png') }}">
+        <link rel="shortcut icon" type="image/png" href="{{ asset('imagem/valohome_logo.png') }}">
         
         <!-- Fonts: Playfair Display / Cormorant & Plus Jakarta Sans -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
