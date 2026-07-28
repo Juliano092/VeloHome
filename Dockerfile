@@ -44,4 +44,4 @@ EXPOSE 8080
 RUN cp -n .env.example .env || true
 
 # Script de inicialização seguro (Cria SQLite, roda migrations, gera key e inicia servidor)
-CMD cp -n .env.example .env && touch /var/www/database/database.sqlite && chmod -R 777 /var/www/database && php artisan key:generate --force && php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
+CMD cp .env.example .env && touch /var/www/database/database.sqlite && chmod -R 777 /var/www/database && php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
