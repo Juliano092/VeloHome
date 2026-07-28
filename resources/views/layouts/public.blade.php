@@ -5,9 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{ config('app.name', 'ValoHome 3D - Design & Value') }}</title>
 
-        <!-- Favicon / Logo do Navegador -->
-        <link rel="icon" type="image/png" href="{{ asset('imagem/valohome_logo.png') }}">
-        <link rel="shortcut icon" type="image/png" href="{{ asset('imagem/valohome_logo.png') }}">
+        <!-- Favicon / Logo do Navegador com cache buster -->
+        <link rel="icon" type="image/png" sizes="64x64" href="{{ asset('imagem/favicon_small.png') }}?v=2">
+        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}?v=2">
+        <link rel="shortcut icon" href="{{ asset('favicon.png') }}?v=2">
+        <link rel="apple-touch-icon" href="{{ asset('imagem/favicon_small.png') }}?v=2">
         
         <!-- Fonts: Playfair Display / Cormorant & Plus Jakarta Sans -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
