@@ -6,10 +6,10 @@
         <title>{{ config('app.name', 'ValoHome 3D - Design & Value') }}</title>
 
         <!-- Favicon / Logo do Navegador com cache buster -->
-        <link rel="icon" type="image/png" sizes="64x64" href="{{ asset('imagem/favicon_small.png') }}?v=2">
-        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}?v=2">
-        <link rel="shortcut icon" href="{{ asset('favicon.png') }}?v=2">
-        <link rel="apple-touch-icon" href="{{ asset('imagem/favicon_small.png') }}?v=2">
+        <link rel="icon" type="image/png" sizes="64x64" href="{{ asset('imagem/favicon_small.png') }}?v=3">
+        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}?v=3">
+        <link rel="shortcut icon" href="{{ asset('favicon.png') }}?v=3">
+        <link rel="apple-touch-icon" href="{{ asset('imagem/favicon_small.png') }}?v=3">
         
         <!-- Fonts: Playfair Display / Cormorant & Plus Jakarta Sans -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,7 +75,7 @@
                 <div class="flex justify-between h-20 items-center">
                     <div class="flex-shrink-0 flex items-center">
                         <a href="/" class="flex items-center gap-3">
-                            <img src="{{ asset('imagem/valohome_logo.png') }}" alt="ValoHome 3D Logo" class="h-12 w-auto object-contain">
+                            <img src="{{ asset('imagem/valohome_logo.png') }}?v=3" alt="ValoHome 3D Logo" class="h-12 w-auto object-contain mix-blend-multiply">
                         </a>
                     </div>
                 </div>

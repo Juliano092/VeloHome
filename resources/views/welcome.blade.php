@@ -17,7 +17,7 @@
         <!-- Hero Header da Loja -->
         <div class="text-center py-12 sm:py-16 relative">
             <div class="flex justify-center mb-4">
-                <img src="{{ asset('imagem/valohome_logo.png') }}" alt="ValoHome 3D Logo" class="h-20 sm:h-24 w-auto object-contain">
+                <img src="{{ asset('imagem/valohome_logo.png') }}?v=3" alt="ValoHome 3D Logo" class="h-20 sm:h-24 w-auto object-contain mix-blend-multiply">
             </div>
 
             <p class="text-xs sm:text-sm tracking-[0.3em] uppercase text-[#8C7B6C] font-semibold mb-2">ValoHome Store</p>

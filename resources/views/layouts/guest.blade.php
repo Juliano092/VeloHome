@@ -60,7 +60,7 @@
 
                 <!-- Lado Direito: Identidade Visual da Marca -->
                 <div class="hidden md:flex w-1/2 bg-[#F5F2EB] relative items-center justify-center p-12 flex-col text-center">
-                    <img src="{{ asset('imagem/valohome_logo.png') }}" alt="ValoHome 3D Logo" class="h-24 w-auto object-contain mb-6">
+                    <img src="{{ asset('imagem/valohome_logo.png') }}?v=3" alt="ValoHome 3D Logo" class="h-24 w-auto object-contain mix-blend-multiply mb-6">
                     <h3 class="font-serif-logo text-3xl text-[#2B2927] font-medium mb-2">Painel de Gestão</h3>
                     <p class="text-xs text-[#8C7B6C] uppercase tracking-[0.2em] font-semibold mb-4">ValoHome 3D</p>
                     <p class="text-xs text-[#4A4643] max-w-xs font-light leading-relaxed">
