@@ -17,13 +17,7 @@
         <!-- Hero Header da Loja -->
         <div class="text-center py-12 sm:py-16 relative">
             <div class="flex justify-center mb-4">
-                <div
-                    class="w-12 h-12 rounded-full bg-[#FAF8F5] border border-[#C4B5A5]/40 flex items-center justify-center shadow-sm">
-                    <svg class="w-6 h-6 text-[#8C7B6C]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                    </svg>
-                </div>
+                <img src="{{ asset('imagem/valohome_logo.png') }}" alt="ValoHome 3D Logo" class="h-20 sm:h-24 w-auto object-contain">
             </div>
 
             <p class="text-xs sm:text-sm tracking-[0.3em] uppercase text-[#8C7B6C] font-semibold mb-2">ValoHome Store</p>
