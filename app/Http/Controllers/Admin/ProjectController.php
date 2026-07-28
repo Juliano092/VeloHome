@@ -41,14 +41,14 @@ class ProjectController extends Controller
         // Upload capa principal (se informada)
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('projects', 'public');
-            $imagesUrls[] = asset('storage/' . $imagePath);
+            $imagesUrls[] = '/storage/' . $imagePath;
         }
 
         // Upload de múltiplas imagens
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
                 $path = $file->store('projects', 'public');
-                $imagesUrls[] = asset('storage/' . $path);
+                $imagesUrls[] = '/storage/' . $path;
             }
         }
 
@@ -97,13 +97,13 @@ class ProjectController extends Controller
         $newImages = [];
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('projects', 'public');
-            $newImages[] = asset('storage/' . $imagePath);
+            $newImages[] = '/storage/' . $imagePath;
         }
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
                 $path = $file->store('projects', 'public');
-                $newImages[] = asset('storage/' . $path);
+                $newImages[] = '/storage/' . $path;
             }
         }
 
