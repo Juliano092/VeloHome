@@ -6,7 +6,7 @@
         selectedProject: null,
         searchQuery: '',
         selectedCategory: 'Todos',
-        whatsappNumber: '5500000000000',
+        whatsappNumber: '5548996830416',
         matchesFilter(title, category) {
             const matchesCat = this.selectedCategory === 'Todos' || category === this.selectedCategory;
             const matchesSearch = !this.searchQuery || title.toLowerCase().includes(this.searchQuery.toLowerCase()) || category.toLowerCase().includes(this.searchQuery.toLowerCase());
@@ -189,7 +189,7 @@
                             </div>
 
                             <!-- Botão Encomendar / WhatsApp -->
-                            <a href="https://wa.me/{{ config('app.whatsapp_number', '5500000000000') }}?text={{ urlencode('Olá ValoHome 3D! Gostaria de encomendar a peça: ' . $title) }}"
+                            <a href="https://wa.me/{{ config('app.whatsapp_number', '5548996830416') }}?text={{ urlencode('Olá ValoHome 3D! Gostaria de encomendar a peça: ' . $title) }}"
                                 target="_blank"
                                 class="px-3.5 sm:px-4 py-2.5 rounded-full bg-[#2B2927] hover:bg-[#8C7B6C] text-[#FAF8F5] text-xs font-medium uppercase tracking-wider transition-all duration-300 flex items-center gap-1.5 shadow-sm">
                                 <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
