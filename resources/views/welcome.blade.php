@@ -74,8 +74,8 @@
             </div>
         </div>
 
-        <!-- Vitrine de Produtos (Loja E-commerce) -->
-        <div id="galeria" class="grid gap-8 sm:grid-cols-2 lg:grid-co            @forelse($projects as $project)
+        <div id="galeria" class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            @forelse($projects as $project)
                 @php
                     $title = $project['title'] ?? 'Peça 3D';
                     $category = $project['category'] ?? 'Decoração';
