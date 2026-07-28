@@ -32,19 +32,32 @@ class ProjectController extends Controller
             'title' => 'required|string|max:255',
             'category' => 'required|string|max:100',
             'price' => 'required|numeric|min:0',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // Max 5MB
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
-        // Upload da imagem para storage/app/public/projects
-        $imagePath = $request->file('image')->store('projects', 'public');
-        $imageUrl = asset('storage/' . $imagePath);
+        $imagesUrls = [];
 
-        // Preparar dados para o Firebase
+        // Upload capa principal (se informada)
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('projects', 'public');
+            $imagesUrls[] = asset('storage/' . $imagePath);
+        }
+
+        // Upload de múltiplas imagens
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('projects', 'public');
+                $imagesUrls[] = asset('storage/' . $path);
+            }
+        }
+
         $firebaseData = [
             'title' => $validated['title'],
             'category' => $validated['category'],
             'price' => $validated['price'],
-            'image_url' => $imageUrl,
+            'image_url' => $imagesUrls[0] ?? null,
+            'images' => array_values(array_unique($imagesUrls)),
         ];
 
         $this->firebaseService->createProject($firebaseData);
@@ -70,6 +83,7 @@ class ProjectController extends Controller
             'category' => 'required|string|max:100',
             'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
         $project = $this->firebaseService->getProjectById($id);
@@ -78,20 +92,34 @@ class ProjectController extends Controller
             return redirect()->route('admin.projects.index')->with('error', 'Produto não encontrado.');
         }
 
+        $existingImages = $project['images'] ?? ($project['image_url'] ? [$project['image_url']] : []);
+
+        $newImages = [];
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('projects', 'public');
+            $newImages[] = asset('storage/' . $imagePath);
+        }
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('projects', 'public');
+                $newImages[] = asset('storage/' . $path);
+            }
+        }
+
+        if (!empty($newImages)) {
+            $imagesUrls = array_values(array_unique(array_merge($newImages, $existingImages)));
+        } else {
+            $imagesUrls = $existingImages;
+        }
+
         $firebaseData = [
             'title' => $validated['title'],
             'category' => $validated['category'],
             'price' => $validated['price'],
+            'image_url' => $imagesUrls[0] ?? null,
+            'images' => $imagesUrls,
         ];
-
-        // Se uma nova imagem foi enviada
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('projects', 'public');
-            $firebaseData['image_url'] = asset('storage/' . $imagePath);
-        } else {
-            // Mantém a imagem atual
-            $firebaseData['image_url'] = $project['image_url'] ?? null;
-        }
 
         $this->firebaseService->updateProject($id, $firebaseData);
 

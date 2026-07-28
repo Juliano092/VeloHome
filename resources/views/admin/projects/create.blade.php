@@ -35,13 +35,22 @@
                             @error('category') <span class="text-rose-600 text-xs mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
-                        <!-- Upload da Imagem -->
+                        <!-- Upload da Imagem Principal (Capa) -->
                         <div>
-                            <label for="image" class="block text-xs font-semibold text-[#8C7B6C] uppercase tracking-wider mb-1">Foto do Produto (Capa) *</label>
+                            <label for="image" class="block text-xs font-semibold text-[#8C7B6C] uppercase tracking-wider mb-1">Foto Principal (Capa) *</label>
                             <input type="file" name="image" id="image" accept="image/*" required 
                                 class="w-full bg-[#F5F2EB] border border-[#C4B5A5]/50 rounded-xl px-4 py-2.5 text-xs text-[#2B2927] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#2B2927] file:text-[#FAF8F5] hover:file:bg-[#8C7B6C] transition-all outline-none cursor-pointer">
-                            <p class="text-xs text-[#8C7B6C] mt-1 font-light">Selecione uma imagem do seu computador (JPG, PNG).</p>
+                            <p class="text-xs text-[#8C7B6C] mt-1 font-light">Selecione a foto principal que aparecerá de capa.</p>
                             @error('image') <span class="text-rose-600 text-xs mt-1 block">{{ $message }}</span> @enderror
+                        </div>
+
+                        <!-- Upload de Fotos Adicionais (Galeria / Carrossel) -->
+                        <div>
+                            <label for="images" class="block text-xs font-semibold text-[#8C7B6C] uppercase tracking-wider mb-1">Galeria de Fotos (Várias Imagens / Carrossel)</label>
+                            <input type="file" name="images[]" id="images" accept="image/*" multiple 
+                                class="w-full bg-[#F5F2EB] border border-[#C4B5A5]/50 rounded-xl px-4 py-2.5 text-xs text-[#2B2927] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#8C7B6C] file:text-[#FAF8F5] hover:file:bg-[#2B2927] transition-all outline-none cursor-pointer">
+                            <p class="text-xs text-[#8C7B6C] mt-1 font-light">Você pode selecionar **múltiplas fotos** de uma vez segurando a tecla Ctrl.</p>
+                            @error('images') <span class="text-rose-600 text-xs mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
                         <!-- Valor do Produto -->

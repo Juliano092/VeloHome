@@ -83,8 +83,12 @@
                     $category = $project['category'] ?? 'Decoração';
                     $price = number_format($project['price'] ?? 0, 2, ',', '.');
                     $img = $project['image_url'] ?? null;
-                    $desc =
-                        $project['description'] ?? 'Peça impressa em alta resolução com acabamento artesanal ValoHome.';
+                    $images = $project['images'] ?? ($img ? [$img] : []);
+                    if (empty($images) && $img) {
+                        $images = [$img];
+                    }
+                    $imagesJson = htmlspecialchars(json_encode($images), ENT_QUOTES, 'UTF-8');
+                    $desc = $project['description'] ?? 'Peça impressa em alta resolução com acabamento artesanal ValoHome.';
                 @endphp
                 <!-- Card de Produto estilo Boutique -->
                 <div x-show="matchesFilter('{{ addslashes($title) }}', '{{ addslashes($category) }}')"
@@ -93,31 +97,66 @@
                     x-transition:enter-end="opacity-100 transform scale-100"
                     class="bg-[#FAF8F5] rounded-2xl overflow-hidden hover:-translate-y-1.5 transition-all duration-300 group border border-[#C4B5A5]/40 shadow-sm hover:shadow-xl flex flex-col h-full relative">
                     <!-- Selo de Exclusivo / Categoria -->
-                    <div class="absolute top-4 left-4 z-20">
+                    <div class="absolute top-4 left-4 z-20 pointer-events-none">
                         <span
                             class="px-3 py-1 bg-[#FAF8F5]/90 backdrop-blur-md rounded-full text-[10px] tracking-widest uppercase font-semibold text-[#2B2927] border border-[#C4B5A5]/30 shadow-sm">
                             {{ $category }}
                         </span>
                     </div>
 
-                    <!-- Foto do Produto -->
-                    <div class="aspect-w-16 aspect-h-12 bg-[#F5F2EB] flex items-center justify-center relative overflow-hidden shrink-0 h-64 border-b border-[#C4B5A5]/20 cursor-pointer"
-                        @click="selectedProject = { title: '{{ addslashes($title) }}', category: '{{ addslashes($category) }}', price: '{{ $price }}', image: '{{ $img }}', description: '{{ addslashes($desc) }}' }; isImageModalOpen = true">
-                        @if ($img)
-                            <img src="{{ $img }}" alt="{{ $title }}"
-                                class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
-                            <!-- Quick View Overlay -->
-                            <div
-                                class="absolute inset-0 bg-[#2B2927]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
-                                <span
-                                    class="px-4 py-2 bg-[#FAF8F5]/90 backdrop-blur-md rounded-full text-[#2B2927] text-xs font-semibold uppercase tracking-wider shadow-md">
-                                    Espiar Detalhes
-                                </span>
+                    <!-- Foto do Produto com Carrossel -->
+                    <div x-data="{ currentImg: 0, imagesList: {{ json_encode($images) }} }"
+                        class="aspect-w-16 aspect-h-12 bg-[#F5F2EB] flex items-center justify-center relative overflow-hidden shrink-0 h-64 border-b border-[#C4B5A5]/20 group/carousel">
+                        
+                        <template x-if="imagesList.length > 0">
+                            <div class="w-full h-full relative">
+                                <template x-for="(image, idx) in imagesList" :key="idx">
+                                    <img :src="image" alt="{{ $title }}"
+                                        x-show="currentImg === idx"
+                                        x-transition:enter="transition opacity ease-out duration-300"
+                                        x-transition:enter-start="opacity-0"
+                                        x-transition:enter-end="opacity-100"
+                                        class="w-full h-full object-cover cursor-pointer group-hover:scale-105 transition-transform duration-700"
+                                        @click="selectedProject = { title: '{{ addslashes($title) }}', category: '{{ addslashes($category) }}', price: '{{ $price }}', image: '{{ $img }}', images: imagesList, description: '{{ addslashes($desc) }}' }; isImageModalOpen = true">
+                                </template>
+
+                                <!-- Controles do Carrossel (Setas) se houver mais de 1 imagem -->
+                                <template x-if="imagesList.length > 1">
+                                    <div>
+                                        <button @click.stop="currentImg = (currentImg - 1 + imagesList.length) % imagesList.length"
+                                            class="absolute left-2 top-1/2 -translate-y-1/2 bg-[#2B2927]/60 hover:bg-[#2B2927] text-white rounded-full p-2 opacity-0 group-hover/carousel:opacity-100 transition-opacity z-20 shadow-md">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                        </button>
+                                        <button @click.stop="currentImg = (currentImg + 1) % imagesList.length"
+                                            class="absolute right-2 top-1/2 -translate-y-1/2 bg-[#2B2927]/60 hover:bg-[#2B2927] text-white rounded-full p-2 opacity-0 group-hover/carousel:opacity-100 transition-opacity z-20 shadow-md">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                        </button>
+
+                                        <!-- Indicadores de Pontos (Dots) -->
+                                        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-20 bg-[#2B2927]/40 px-2 py-1 rounded-full backdrop-blur-sm">
+                                            <template x-for="(img, idx) in imagesList" :key="idx">
+                                                <button @click.stop="currentImg = idx"
+                                                    :class="currentImg === idx ? 'bg-white w-3' : 'bg-white/50 w-1.5'"
+                                                    class="h-1.5 rounded-full transition-all duration-300"></button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <!-- Overlay Quick View -->
+                                <div class="absolute inset-0 bg-[#2B2927]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10 pointer-events-none">
+                                    <span class="px-4 py-2 bg-[#FAF8F5]/90 backdrop-blur-md rounded-full text-[#2B2927] text-xs font-semibold uppercase tracking-wider shadow-md">
+                                        Espiar Detalhes
+                                    </span>
+                                </div>
                             </div>
-                        @else
+                        </template>
+
+                        <template x-if="imagesList.length === 0">
                             <div class="w-full h-full flex items-center justify-center text-[#8C7B6C] font-light text-sm">
-                                Sem Foto</div>
-                        @endif
+                                Sem Foto
+                            </div>
+                        </template>
                     </div>
 
                     <!-- Informações e Botão de Compra -->
@@ -187,12 +226,40 @@
                 </button>
 
                 <template x-if="selectedProject">
-                    <div class="grid md:grid-cols-2">
-                        <!-- Foto em Destaque no Modal -->
-                        <div
-                            class="bg-[#F5F2EB] flex items-center justify-center p-6 border-b md:border-b-0 md:border-r border-[#C4B5A5]/30 min-h-[300px]">
-                            <img :src="selectedProject.image" :alt="selectedProject.title"
-                                class="max-h-[350px] w-full object-contain rounded-xl shadow-md">
+                    <div x-data="{ modalImgIdx: 0 }" class="grid md:grid-cols-2">
+                        <!-- Foto em Destaque no Modal com Carrossel e Miniaturas -->
+                        <div class="bg-[#F5F2EB] flex flex-col items-center justify-center p-6 border-b md:border-b-0 md:border-r border-[#C4B5A5]/30 min-h-[350px] relative">
+                            <div class="relative w-full h-[300px] flex items-center justify-center">
+                                <img :src="(selectedProject.images && selectedProject.images.length > 0) ? selectedProject.images[modalImgIdx] : selectedProject.image"
+                                    :alt="selectedProject.title"
+                                    class="max-h-[300px] w-full object-contain rounded-xl shadow-md transition-all duration-300">
+
+                                <!-- Setas de navegação no Modal se houver múltiplas fotos -->
+                                <template x-if="selectedProject.images && selectedProject.images.length > 1">
+                                    <div>
+                                        <button @click="modalImgIdx = (modalImgIdx - 1 + selectedProject.images.length) % selectedProject.images.length"
+                                            class="absolute left-1 top-1/2 -translate-y-1/2 bg-[#2B2927]/70 hover:bg-[#2B2927] text-white p-2 rounded-full shadow-md z-10">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                        </button>
+                                        <button @click="modalImgIdx = (modalImgIdx + 1) % selectedProject.images.length"
+                                            class="absolute right-1 top-1/2 -translate-y-1/2 bg-[#2B2927]/70 hover:bg-[#2B2927] text-white p-2 rounded-full shadow-md z-10">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Carrossel de Miniaturas (Thumbnails) abaixo da foto principal -->
+                            <template x-if="selectedProject.images && selectedProject.images.length > 1">
+                                <div class="flex gap-2 mt-4 overflow-x-auto max-w-full pb-1">
+                                    <template x-for="(img, idx) in selectedProject.images" :key="idx">
+                                        <img :src="img"
+                                            @click="modalImgIdx = idx"
+                                            :class="modalImgIdx === idx ? 'ring-2 ring-[#8C7B6C] scale-105 opacity-100' : 'opacity-50 hover:opacity-100'"
+                                            class="w-12 h-12 object-cover rounded-lg cursor-pointer transition-all border border-[#C4B5A5]/40 shadow-sm">
+                                    </template>
+                                </div>
+                            </template>
                         </div>
 
                         <!-- Detalhes do Produto no Modal -->
