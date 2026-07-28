@@ -1,6 +1,4 @@
-@extends('layouts.public')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div x-data="{
         isImageModalOpen: false,
         selectedProject: null,
@@ -17,7 +15,7 @@
         <!-- Hero Header da Loja -->
         <div class="text-center py-12 sm:py-16 relative">
             <div class="flex justify-center mb-4">
-                <img src="{{ asset('imagem/valohome_logo.png') }}?v=3" alt="ValoHome 3D Logo" class="h-20 sm:h-24 w-auto object-contain mix-blend-multiply">
+                <img src="<?php echo e(asset('imagem/valohome_logo.png')); ?>?v=3" alt="ValoHome 3D Logo" class="h-20 sm:h-24 w-auto object-contain mix-blend-multiply">
             </div>
 
             <p class="text-xs sm:text-sm tracking-[0.3em] uppercase text-[#8C7B6C] font-semibold mb-2">ValoHome Store</p>
@@ -60,23 +58,24 @@
                     class="px-5 py-2 rounded-full text-xs font-semibold tracking-wider uppercase transition-all shrink-0">
                     Todos os Produtos
                 </button>
-                @php
+                <?php
                     $categories = array_values(array_unique(array_filter(array_column($projects, 'category'))));
-                @endphp
-                @foreach ($categories as $cat)
-                    <button @click="selectedCategory = '{{ $cat }}'"
-                        :class="selectedCategory === '{{ $cat }}' ? 'bg-[#2B2927] text-[#FAF8F5]' :
+                ?>
+                <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <button @click="selectedCategory = '<?php echo e($cat); ?>'"
+                        :class="selectedCategory === '<?php echo e($cat); ?>' ? 'bg-[#2B2927] text-[#FAF8F5]' :
                             'bg-[#F5F2EB] text-[#4A4643] hover:bg-[#C4B5A5]/30'"
                         class="px-5 py-2 rounded-full text-xs font-semibold tracking-wider uppercase transition-all shrink-0">
-                        {{ $cat }}
+                        <?php echo e($cat); ?>
+
                     </button>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
         </div>
 
         <div id="galeria" class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            @forelse($projects as $project)
-                @php
+            <?php $__empty_1 = true; $__currentLoopData = $projects; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $project): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                <?php
                     $title = $project['title'] ?? 'Peça 3D';
                     $category = $project['category'] ?? 'Decoração';
                     $price = number_format($project['price'] ?? 0, 2, ',', '.');
@@ -97,9 +96,9 @@
                     }
                     $images = array_values(array_filter(array_map($fixStorageUrl, $rawImages)));
                     $desc = $project['description'] ?? 'Peça impressa em alta resolução com acabamento artesanal ValoHome.';
-                @endphp
+                ?>
                 <!-- Card de Produto estilo Boutique -->
-                <div x-show="matchesFilter('{{ addslashes($title) }}', '{{ addslashes($category) }}')"
+                <div x-show="matchesFilter('<?php echo e(addslashes($title)); ?>', '<?php echo e(addslashes($category)); ?>')"
                     x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="opacity-0 transform scale-95"
                     x-transition:enter-end="opacity-100 transform scale-100"
@@ -108,25 +107,26 @@
                     <div class="absolute top-4 left-4 z-20 pointer-events-none">
                         <span
                             class="px-3 py-1 bg-[#FAF8F5]/90 backdrop-blur-md rounded-full text-[10px] tracking-widest uppercase font-semibold text-[#2B2927] border border-[#C4B5A5]/30 shadow-sm">
-                            {{ $category }}
+                            <?php echo e($category); ?>
+
                         </span>
                     </div>
 
                     <!-- Foto do Produto com Carrossel -->
-                    <div x-data="{ currentImg: 0, imagesList: {{ json_encode($images) }} }"
+                    <div x-data="{ currentImg: 0, imagesList: <?php echo e(json_encode($images)); ?> }"
                         class="aspect-w-16 aspect-h-12 bg-[#F5F2EB] flex items-center justify-center relative overflow-hidden shrink-0 h-56 sm:h-64 border-b border-[#C4B5A5]/20 group/carousel">
                         
                         <template x-if="imagesList.length > 0">
                             <div class="w-full h-full relative">
                                 <template x-for="(image, idx) in imagesList" :key="idx">
-                                    <img :src="image" alt="{{ $title }}"
+                                    <img :src="image" alt="<?php echo e($title); ?>"
                                         x-show="currentImg === idx"
                                         x-transition:enter="transition opacity ease-out duration-300"
                                         x-transition:enter-start="opacity-0"
                                         x-transition:enter-end="opacity-100"
                                         onerror="this.src='/imagem/valohome_logo.png'"
                                         class="w-full h-full object-cover cursor-pointer group-hover:scale-105 transition-transform duration-700"
-                                        @click="selectedProject = { title: '{{ addslashes($title) }}', category: '{{ addslashes($category) }}', price: '{{ $price }}', image: '{{ $img }}', images: imagesList, description: '{{ addslashes($desc) }}' }; isImageModalOpen = true">
+                                        @click="selectedProject = { title: '<?php echo e(addslashes($title)); ?>', category: '<?php echo e(addslashes($category)); ?>', price: '<?php echo e($price); ?>', image: '<?php echo e($img); ?>', images: imagesList, description: '<?php echo e(addslashes($desc)); ?>' }; isImageModalOpen = true">
                                 </template>
 
                                 <!-- Controles do Carrossel (Setas) se houver mais de 1 imagem -->
@@ -172,11 +172,13 @@
                     <div class="p-5 sm:p-6 flex flex-col flex-1">
                         <h3
                             class="font-serif-logo text-xl sm:text-2xl font-medium text-[#2B2927] mb-2 leading-tight group-hover:text-[#8C7B6C] transition-colors">
-                            {{ $title }}
+                            <?php echo e($title); ?>
+
                         </h3>
 
                         <p class="text-xs text-[#4A4643] line-clamp-2 mb-6 font-light">
-                            {{ $desc }}
+                            <?php echo e($desc); ?>
+
                         </p>
 
                         <div class="mt-auto pt-4 border-t border-[#C4B5A5]/30 flex items-center justify-between gap-2">
@@ -184,12 +186,13 @@
                                 <span
                                     class="text-[10px] text-[#8C7B6C] uppercase font-semibold block tracking-wider">Preço</span>
                                 <span class="text-lg sm:text-xl font-semibold text-[#2B2927]">
-                                    R$ {{ $price }}
+                                    R$ <?php echo e($price); ?>
+
                                 </span>
                             </div>
 
                             <!-- Botão Encomendar / WhatsApp -->
-                            <a href="https://wa.me/{{ config('app.whatsapp_number', '5500000000000') }}?text={{ urlencode('Olá ValoHome 3D! Gostaria de encomendar a peça: ' . $title) }}"
+                            <a href="https://wa.me/<?php echo e(config('app.whatsapp_number', '5500000000000')); ?>?text=<?php echo e(urlencode('Olá ValoHome 3D! Gostaria de encomendar a peça: ' . $title)); ?>"
                                 target="_blank"
                                 class="px-3.5 sm:px-4 py-2.5 rounded-full bg-[#2B2927] hover:bg-[#8C7B6C] text-[#FAF8F5] text-xs font-medium uppercase tracking-wider transition-all duration-300 flex items-center gap-1.5 shadow-sm">
                                 <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
@@ -201,12 +204,12 @@
                         </div>
                     </div>
                 </div>
-            @empty
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <div class="col-span-full text-center py-16 bg-[#FAF8F5] rounded-2xl border border-[#C4B5A5]/30">
                     <p class="text-[#8C7B6C] font-serif-logo text-2xl mb-1">Catálogo em atualização</p>
                     <p class="text-[#4A4643] text-sm">Os produtos adicionados aparecerão aqui em breve.</p>
                 </div>
-            @endforelse
+            <?php endif; ?>
 
         </div>
 
@@ -314,4 +317,6 @@
         </div>
 
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.public', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Evolusat\Documents\GitHub\Shift3D\resources\views/welcome.blade.php ENDPATH**/ ?>
