@@ -7,9 +7,14 @@ use Kreait\Firebase\Factory;
 class FirebaseService
 {
     protected $database;
+    protected $localProjectsFile;
+    protected $localSalesFile;
 
     public function __construct()
     {
+        $this->localProjectsFile = storage_path('app/projects_fallback.json');
+        $this->localSalesFile = storage_path('app/sales_fallback.json');
+
         $factory = new Factory();
         $credentialsPath = env('FIREBASE_CREDENTIALS');
         $hasCredentials = false;
@@ -17,7 +22,7 @@ class FirebaseService
         if ($credentialsPath && file_exists(base_path($credentialsPath)) && is_file(base_path($credentialsPath))) {
             $factory = $factory->withServiceAccount(base_path($credentialsPath));
             $hasCredentials = true;
-        } elseif ($credentialsPath && str_starts_with(trim($credentialsPath), '{')) {
+        } elseif ($credentialsPath && str_starts_with(trim($credentialsPath ?? ''), '{')) {
             $factory = $factory->withServiceAccount(json_decode($credentialsPath, true));
             $hasCredentials = true;
         } elseif (file_exists(base_path('firebase_credentials.json'))) {
@@ -29,14 +34,13 @@ class FirebaseService
             $factory = $factory->withDatabaseUri(env('FIREBASE_DATABASE_URL'));
         }
 
-        // Se estiver em ambiente local ou produção
         if (env('APP_ENV') === 'local' || env('APP_ENV') == '') {
             $options = \Kreait\Firebase\Http\HttpClientOptions::default()->withGuzzleConfigOption('verify', false);
             $factory = $factory->withHttpClientOptions($options);
         }
 
         try {
-            if ($hasCredentials) {
+            if ($hasCredentials && env('FIREBASE_DATABASE_URL')) {
                 $this->database = $factory->createDatabase();
             } else {
                 $this->database = null;
@@ -46,50 +50,66 @@ class FirebaseService
         }
     }
 
-    /**
-     * Retorna a referência da coleção de projetos no Realtime Database
-     */
     public function getProjectsReference()
     {
-        return $this->database->getReference('projects');
+        return $this->database ? $this->database->getReference('projects') : null;
     }
 
-    /**
-     * Salva um novo projeto 3D no Firebase
-     */
     public function createProject(array $data)
     {
-        $reference = $this->getProjectsReference();
-        
         $data['created_at'] = time();
-        $newProject = $reference->push($data);
 
-        return $newProject->getKey();
+        if ($this->database) {
+            try {
+                $reference = $this->getProjectsReference();
+                if ($reference) {
+                    $newProject = $reference->push($data);
+                    return $newProject->getKey();
+                }
+            } catch (\Throwable $e) {
+                // Fallback para arquivo local
+            }
+        }
+
+        // Armazenamento local fallback
+        $projects = $this->getLocalData($this->localProjectsFile);
+        $id = 'local_' . uniqid();
+        $data['id'] = $id;
+        $projects[$id] = $data;
+        $this->saveLocalData($this->localProjectsFile, $projects);
+
+        return $id;
     }
 
-    /**
-     * Busca todos os projetos
-     */
     public function getAllProjects()
     {
         $projects = [];
 
-        if (!$this->database) {
-            return $projects;
-        }
-
-        try {
-            $snapshot = $this->getProjectsReference()->getSnapshot();
-            if ($snapshot->hasChildren()) {
-                foreach ($snapshot->getValue() as $key => $projectData) {
-                    $projects[] = array_merge(['id' => $key], $projectData);
+        if ($this->database) {
+            try {
+                $reference = $this->getProjectsReference();
+                if ($reference) {
+                    $snapshot = $reference->getSnapshot();
+                    if ($snapshot->hasChildren()) {
+                        foreach ($snapshot->getValue() as $key => $projectData) {
+                            $projects[] = array_merge(['id' => $key], $projectData);
+                        }
+                    }
+                    usort($projects, function($a, $b) {
+                        return ($b['created_at'] ?? 0) <=> ($a['created_at'] ?? 0);
+                    });
+                    return $projects;
                 }
+            } catch (\Throwable $e) {
+                // Fallback para arquivo local
             }
-        } catch (\Throwable $e) {
-            return $projects;
         }
 
-        // Ordenar os mais recentes primeiro
+        $localProjects = $this->getLocalData($this->localProjectsFile);
+        foreach ($localProjects as $key => $item) {
+            $projects[] = array_merge(['id' => $key], $item);
+        }
+
         usort($projects, function($a, $b) {
             return ($b['created_at'] ?? 0) <=> ($a['created_at'] ?? 0);
         });
@@ -97,35 +117,72 @@ class FirebaseService
         return $projects;
     }
 
-    /**
-     * Busca um projeto específico pelo ID
-     */
     public function getProjectById($id)
     {
-        $snapshot = $this->getProjectsReference()->getChild($id)->getSnapshot();
-        
-        if ($snapshot->exists()) {
-            return array_merge(['id' => $id], $snapshot->getValue());
+        if ($this->database) {
+            try {
+                $reference = $this->getProjectsReference();
+                if ($reference) {
+                    $snapshot = $reference->getChild($id)->getSnapshot();
+                    if ($snapshot->exists()) {
+                        return array_merge(['id' => $id], $snapshot->getValue());
+                    }
+                }
+            } catch (\Throwable $e) {
+                // Fallback
+            }
+        }
+
+        $localProjects = $this->getLocalData($this->localProjectsFile);
+        if (isset($localProjects[$id])) {
+            return array_merge(['id' => $id], $localProjects[$id]);
         }
 
         return null;
     }
 
-    /**
-     * Atualiza um projeto
-     */
     public function updateProject($id, array $data)
     {
-        $this->getProjectsReference()->getChild($id)->update($data);
+        if ($this->database) {
+            try {
+                $reference = $this->getProjectsReference();
+                if ($reference) {
+                    $reference->getChild($id)->update($data);
+                    return true;
+                }
+            } catch (\Throwable $e) {
+                // Fallback
+            }
+        }
+
+        $localProjects = $this->getLocalData($this->localProjectsFile);
+        if (isset($localProjects[$id])) {
+            $localProjects[$id] = array_merge($localProjects[$id], $data);
+            $this->saveLocalData($this->localProjectsFile, $localProjects);
+        }
+
         return true;
     }
 
-    /**
-     * Deleta um projeto
-     */
     public function deleteProject($id)
     {
-        $this->getProjectsReference()->getChild($id)->remove();
+        if ($this->database) {
+            try {
+                $reference = $this->getProjectsReference();
+                if ($reference) {
+                    $reference->getChild($id)->remove();
+                }
+            } catch (\Throwable $e) {
+                // Fallback
+            }
+        }
+
+        $localProjects = $this->getLocalData($this->localProjectsFile);
+        if (isset($localProjects[$id])) {
+            unset($localProjects[$id]);
+            $this->saveLocalData($this->localProjectsFile, $localProjects);
+        }
+
         return true;
     }
 
@@ -135,38 +192,63 @@ class FirebaseService
 
     public function getSalesReference()
     {
-        return $this->database->getReference('sales');
+        return $this->database ? $this->database->getReference('sales') : null;
     }
 
     public function createSale(array $data)
     {
-        $reference = $this->getSalesReference();
         $data['created_at'] = time();
-        $newSale = $reference->push($data);
 
-        return $newSale->getKey();
+        if ($this->database) {
+            try {
+                $reference = $this->getSalesReference();
+                if ($reference) {
+                    $newSale = $reference->push($data);
+                    return $newSale->getKey();
+                }
+            } catch (\Throwable $e) {
+                // Fallback
+            }
+        }
+
+        $sales = $this->getLocalData($this->localSalesFile);
+        $id = 'local_' . uniqid();
+        $data['id'] = $id;
+        $sales[$id] = $data;
+        $this->saveLocalData($this->localSalesFile, $sales);
+
+        return $id;
     }
 
     public function getAllSales()
     {
         $sales = [];
 
-        if (!$this->database) {
-            return $sales;
-        }
-
-        try {
-            $snapshot = $this->getSalesReference()->getSnapshot();
-            if ($snapshot->hasChildren()) {
-                foreach ($snapshot->getValue() as $key => $saleData) {
-                    $sales[] = array_merge(['id' => $key], $saleData);
+        if ($this->database) {
+            try {
+                $reference = $this->getSalesReference();
+                if ($reference) {
+                    $snapshot = $reference->getSnapshot();
+                    if ($snapshot->hasChildren()) {
+                        foreach ($snapshot->getValue() as $key => $saleData) {
+                            $sales[] = array_merge(['id' => $key], $saleData);
+                        }
+                    }
+                    usort($sales, function($a, $b) {
+                        return ($b['created_at'] ?? 0) <=> ($a['created_at'] ?? 0);
+                    });
+                    return $sales;
                 }
+            } catch (\Throwable $e) {
+                // Fallback
             }
-        } catch (\Throwable $e) {
-            return $sales;
         }
 
-        // Ordenar as mais recentes primeiro
+        $localSales = $this->getLocalData($this->localSalesFile);
+        foreach ($localSales as $key => $item) {
+            $sales[] = array_merge(['id' => $key], $item);
+        }
+
         usort($sales, function($a, $b) {
             return ($b['created_at'] ?? 0) <=> ($a['created_at'] ?? 0);
         });
@@ -176,13 +258,65 @@ class FirebaseService
 
     public function updateSale($id, array $data)
     {
-        $this->getSalesReference()->getChild($id)->update($data);
+        if ($this->database) {
+            try {
+                $reference = $this->getSalesReference();
+                if ($reference) {
+                    $reference->getChild($id)->update($data);
+                    return true;
+                }
+            } catch (\Throwable $e) {
+                // Fallback
+            }
+        }
+
+        $localSales = $this->getLocalData($this->localSalesFile);
+        if (isset($localSales[$id])) {
+            $localSales[$id] = array_merge($localSales[$id], $data);
+            $this->saveLocalData($this->localSalesFile, $localSales);
+        }
+
         return true;
     }
 
     public function deleteSale($id)
     {
-        $this->getSalesReference()->getChild($id)->remove();
+        if ($this->database) {
+            try {
+                $reference = $this->getSalesReference();
+                if ($reference) {
+                    $reference->getChild($id)->remove();
+                }
+            } catch (\Throwable $e) {
+                // Fallback
+            }
+        }
+
+        $localSales = $this->getLocalData($this->localSalesFile);
+        if (isset($localSales[$id])) {
+            unset($localSales[$id]);
+            $this->saveLocalData($this->localSalesFile, $localSales);
+        }
+
         return true;
+    }
+
+    // Auxiliares para JSON local
+    protected function getLocalData(string $filePath): array
+    {
+        if (!file_exists($filePath)) {
+            return [];
+        }
+        $content = file_get_contents($filePath);
+        return json_decode($content, true) ?? [];
+    }
+
+    protected function saveLocalData(string $filePath, array $data): void
+    {
+        $dir = dirname($filePath);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        file_put_contents($filePath, json_encode($data, JSON_PRETTY_PRINT));
     }
 }
